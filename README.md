@@ -1,6 +1,12 @@
+ 
+# Instalar y guia de el
+ https://guide.elm-lang.org/install/elm.html
+
  # Compilar el código
 
+ ```
  elm make src/Main.elm --output build/main.js
+ ```
 
 
 # Librería de particulas
