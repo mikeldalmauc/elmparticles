@@ -8,6 +8,8 @@
  elm make src/Main.elm --output build/main.js
  ```
 
+# Arrancar la web
+Live server sobre app.html
 
 # Librería de particulas
 
