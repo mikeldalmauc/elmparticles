@@ -5211,6 +5211,9 @@ var $author$project$Main$Ooze = function (a) {
 var $author$project$Main$RainC = function (a) {
 	return {$: 'RainC', a: a};
 };
+var $author$project$Main$SnowC = function (a) {
+	return {$: 'SnowC', a: a};
+};
 var $author$project$Main$StarC = function (a) {
 	return {$: 'StarC', a: a};
 };
@@ -5233,6 +5236,9 @@ var $author$project$Main$cursorDecode = function (cursor) {
 				{height: 65, width: 65});
 		case 'Rain':
 			return $author$project$Main$RainC(
+				{height: 65, width: 65});
+		case 'Snow':
+			return $author$project$Main$SnowC(
 				{height: 65, width: 65});
 		default:
 			return $author$project$Main$ConfettiC(
@@ -5282,6 +5288,8 @@ var $author$project$Main$init = function (_v0) {
 				$elm$random$Random$initialSeed(0)),
 			systemRain: $BrianHicks$elm_particle$Particle$System$init(
 				$elm$random$Random$initialSeed(0)),
+			systemSnow: $BrianHicks$elm_particle$Particle$System$init(
+				$elm$random$Random$initialSeed(0)),
 			systemStars: $BrianHicks$elm_particle$Particle$System$init(
 				$elm$random$Random$initialSeed(0)),
 			window: {height: 0, width: 0}
@@ -5309,6 +5317,9 @@ var $author$project$Main$ParticlePukeMsg = function (a) {
 };
 var $author$project$Main$ParticleRainMsg = function (a) {
 	return {$: 'ParticleRainMsg', a: a};
+};
+var $author$project$Main$ParticleSnowMsg = function (a) {
+	return {$: 'ParticleSnowMsg', a: a};
 };
 var $author$project$Main$ParticleStarsMsg = function (a) {
 	return {$: 'ParticleStarsMsg', a: a};
@@ -6029,6 +6040,108 @@ var $author$project$Rain$rainEmitter = F3(
 								A2($elm_community$random_extra$Random$Float$normal, 1, 0.1),
 								$BrianHicks$elm_particle$Particle$init($author$project$Rain$droplet)))))));
 	});
+var $author$project$Snow$Snow = function (a) {
+	return {$: 'Snow', a: a};
+};
+var $elm$random$Random$map4 = F5(
+	function (func, _v0, _v1, _v2, _v3) {
+		var genA = _v0.a;
+		var genB = _v1.a;
+		var genC = _v2.a;
+		var genD = _v3.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v4 = genA(seed0);
+				var a = _v4.a;
+				var seed1 = _v4.b;
+				var _v5 = genB(seed1);
+				var b = _v5.a;
+				var seed2 = _v5.b;
+				var _v6 = genC(seed2);
+				var c = _v6.a;
+				var seed3 = _v6.b;
+				var _v7 = genD(seed3);
+				var d = _v7.a;
+				var seed4 = _v7.b;
+				return _Utils_Tuple2(
+					A4(func, a, b, c, d),
+					seed4);
+			});
+	});
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Snow$flake = A5(
+	$elm$random$Random$map4,
+	F4(
+		function (color, radius, rotations, rotationOffset) {
+			return $author$project$Snow$Snow(
+				{
+					color: color,
+					radius: $elm$core$Basics$round(
+						$elm$core$Basics$abs(radius)),
+					rotationOffset: rotationOffset,
+					rotations: rotations
+				});
+		}),
+	A2(
+		$elm$random$Random$uniform,
+		'#ffffff',
+		_List_fromArray(
+			['#dae2e2', '#d6e6e6', '#becdce', '#bfc9c9'])),
+	A2(
+		$elm$random$Random$map,
+		$elm$core$Basics$max(10),
+		A2($elm_community$random_extra$Random$Float$normal, 7, 4)),
+	A2($elm_community$random_extra$Random$Float$normal, 1, 1),
+	A2($elm$random$Random$float, 0, 1));
+var $BrianHicks$elm_particle$Particle$withDrag = function (drag) {
+	return $elm$random$Random$map(
+		function (_v0) {
+			var particle = _v0.a;
+			return $BrianHicks$elm_particle$Particle$Particle(
+				_Utils_update(
+					particle,
+					{
+						drag: drag(particle.data)
+					}));
+		});
+};
+var $author$project$Snow$snowEmitter = F3(
+	function (width, height, delta) {
+		return A2(
+			$elm$random$Random$list,
+			$elm$core$Basics$ceiling(delta * (400 / 1000)),
+			A2(
+				$BrianHicks$elm_particle$Particle$withDrag,
+				function (_v0) {
+					return {area: 5, coefficient: 0.029, density: 0.001226};
+				},
+				A2(
+					$BrianHicks$elm_particle$Particle$withGravity,
+					0,
+					A2(
+						$BrianHicks$elm_particle$Particle$withSpeed,
+						A2($elm_community$random_extra$Random$Float$normal, 170, 20),
+						A2(
+							$BrianHicks$elm_particle$Particle$withDirection,
+							A2(
+								$elm_community$random_extra$Random$Float$normal,
+								$elm$core$Basics$degrees(180),
+								$elm$core$Basics$degrees(5)),
+							A2(
+								$BrianHicks$elm_particle$Particle$withLocation,
+								A3(
+									$elm$random$Random$map2,
+									F2(
+										function (x, y) {
+											return {x: x, y: y};
+										}),
+									A2($elm$random$Random$float, -100, width),
+									$elm$random$Random$constant(0)),
+								A2(
+									$BrianHicks$elm_particle$Particle$withLifetime,
+									A2($elm_community$random_extra$Random$Float$normal, 5, 1),
+									$BrianHicks$elm_particle$Particle$init($author$project$Snow$flake))))))));
+	});
 var $BrianHicks$elm_particle$Particle$System$NewFrame = F3(
 	function (a, b, c) {
 		return {$: 'NewFrame', a: a, b: b, c: c};
@@ -6235,6 +6348,14 @@ var $author$project$Main$subscriptions = function (model) {
 					]),
 				$author$project$Main$ParticleRainMsg,
 				model.systemRain),
+				A3(
+				$BrianHicks$elm_particle$Particle$System$sub,
+				_List_fromArray(
+					[
+						A2($author$project$Snow$snowEmitter, model.window.width, model.window.height)
+					]),
+				$author$project$Main$ParticleSnowMsg,
+				model.systemSnow),
 				$elm$browser$Browser$Events$onClick(
 				$elm$json$Json$Decode$succeed($author$project$Main$TriggerBurst)),
 				$elm$browser$Browser$Events$onMouseMove(
@@ -6353,7 +6474,6 @@ var $author$project$Confetti$Blue = {$: 'Blue'};
 var $author$project$Confetti$Streamer = function (a) {
 	return {$: 'Streamer', a: a};
 };
-var $elm$core$Basics$round = _Basics_round;
 var $author$project$Confetti$genStreamer = A3(
 	$elm$random$Random$map2,
 	F2(
@@ -6392,18 +6512,6 @@ var $BrianHicks$elm_particle$Particle$withDelay = $elm$random$Random$map2(
 						lifetime: -$elm$core$Basics$abs(delay)
 					}));
 		}));
-var $BrianHicks$elm_particle$Particle$withDrag = function (drag) {
-	return $elm$random$Random$map(
-		function (_v0) {
-			var particle = _v0.a;
-			return $BrianHicks$elm_particle$Particle$Particle(
-				_Utils_update(
-					particle,
-					{
-						drag: drag(particle.data)
-					}));
-		});
-};
 var $author$project$Confetti$particleAt = F2(
 	function (x, y) {
 		return A2(
@@ -6645,7 +6753,7 @@ var $author$project$Revolver$burst = function (_v0) {
 	return A2(
 		$elm$random$Random$list,
 		1,
-		A2($author$project$Revolver$particleAt, x + 165, y - 44));
+		A2($author$project$Revolver$particleAt, x + 150, y - 44));
 };
 var $author$project$Stars$Blue = {$: 'Blue'};
 var $author$project$Stars$Green = {$: 'Green'};
@@ -6810,6 +6918,8 @@ var $author$project$Main$burst = function (model) {
 							_Utils_Tuple2(x, y)),
 						model.systemStars)
 				});
+		case 'RainC':
+			return model;
 		default:
 			return model;
 	}
@@ -7059,6 +7169,15 @@ var $author$project$Main$update = F2(
 								systemRain: A2($BrianHicks$elm_particle$Particle$System$update, particleMsg, model.systemRain)
 							}),
 						$elm$core$Platform$Cmd$none);
+				case 'ParticleSnowMsg':
+					var particleMsg = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								systemSnow: A2($BrianHicks$elm_particle$Particle$System$update, particleMsg, model.systemSnow)
+							}),
+						$elm$core$Platform$Cmd$none);
 				case 'ChangeCursor':
 					var cursor = msg.a;
 					var cursorDec = $author$project$Main$cursorDecode(cursor);
@@ -7119,6 +7238,9 @@ var $author$project$Main$cursorDimensions = function (cursor) {
 		case 'StarC':
 			var dimensions = cursor.a;
 			return _Utils_Tuple2(dimensions.width, dimensions.height);
+		case 'RainC':
+			var dimensions = cursor.a;
+			return _Utils_Tuple2(dimensions.width, dimensions.height);
 		default:
 			var dimensions = cursor.a;
 			return _Utils_Tuple2(dimensions.width, dimensions.height);
@@ -7136,8 +7258,10 @@ var $author$project$Main$cursorImage = function (cursor) {
 			return '../assets/firework/firework.png';
 		case 'StarC':
 			return '../assets/starrynight/star.png';
-		default:
+		case 'RainC':
 			return '../assets/rain/umbrella.png';
+		default:
+			return '../assets/snow/snow.png';
 	}
 };
 var $elm$core$String$fromFloat = _String_fromNumber;
@@ -7453,6 +7577,44 @@ var $author$project$Revolver$view = function (particle) {
 			]),
 		_List_Nil);
 };
+var $author$project$Snow$createHexPoint = F2(
+	function (deltaX, deltaY) {
+		return A2(
+			$elm$core$String$join,
+			',',
+			_List_fromArray(
+				[
+					$elm$core$String$fromInt(deltaX) + ' 0',
+					$elm$core$String$fromInt(deltaX * 2) + (' ' + $elm$core$String$fromInt(deltaY)),
+					$elm$core$String$fromInt(deltaX * 2) + (' ' + $elm$core$String$fromInt(deltaY * 3)),
+					$elm$core$String$fromInt(deltaX) + (' ' + $elm$core$String$fromInt(deltaY * 4)),
+					'0 ' + $elm$core$String$fromInt(deltaY * 3),
+					'0 ' + $elm$core$String$fromInt(deltaY)
+				]));
+	});
+var $elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
+var $elm$svg$Svg$polygon = $elm$svg$Svg$trustedNode('polygon');
+var $author$project$Snow$view = function (particle) {
+	var lifetime = $BrianHicks$elm_particle$Particle$lifetimePercent(particle);
+	var _v0 = $BrianHicks$elm_particle$Particle$data(particle);
+	var color = _v0.a.color;
+	var radius = _v0.a.radius;
+	var rotations = _v0.a.rotations;
+	var rotationOffset = _v0.a.rotationOffset;
+	var deltaX = (radius / 2) | 0;
+	var deltaY = (radius / 4) | 0;
+	return A2(
+		$elm$svg$Svg$polygon,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$points(
+				A2($author$project$Snow$createHexPoint, deltaX, deltaY)),
+				$elm$svg$Svg$Attributes$fill(color),
+				$elm$svg$Svg$Attributes$transform(
+				'rotate(' + ($elm$core$String$fromFloat(((rotations * lifetime) + rotationOffset) * 360) + ')'))
+			]),
+		_List_Nil);
+};
 var $author$project$Stars$hslString = F3(
 	function (hue, saturation, luminance) {
 		return 'hsl(' + ($elm$core$String$fromFloat(hue) + (',' + ($elm$core$String$fromFloat(saturation) + ('%,' + ($elm$core$String$fromFloat(luminance) + '%)')))));
@@ -7529,8 +7691,10 @@ var $author$project$Main$view = function (model) {
 				return A3($BrianHicks$elm_particle$Particle$System$view, $author$project$Firework$view, props, model.systemFirework);
 			case 'StarC':
 				return A3($BrianHicks$elm_particle$Particle$System$view, $author$project$Stars$view, props, model.systemStars);
-			default:
+			case 'RainC':
 				return A3($BrianHicks$elm_particle$Particle$System$view, $author$project$Rain$view, props, model.systemRain);
+			default:
+				return A3($BrianHicks$elm_particle$Particle$System$view, $author$project$Snow$view, props, model.systemSnow);
 		}
 	}();
 	var _v0 = model.mouse;

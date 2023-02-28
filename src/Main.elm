@@ -30,6 +30,7 @@ import Puke exposing (Puke)
 import Firework exposing (Firework)
 import Stars exposing (Star)
 import Rain exposing (Rain)
+import Snow exposing (Snow)
 
 
 type alias Model =
@@ -39,6 +40,7 @@ type alias Model =
     , systemFirework : System Firework
     , systemStars : System Star
     , systemRain : System Rain
+    , systemSnow : System Snow
     , mouse : (Float, Float)
     , cursor : Cursor
     , window : Dimension
@@ -54,6 +56,7 @@ type Msg
     | ParticleFireworkMsg (System.Msg Firework)
     | ParticleStarsMsg (System.Msg Star)
     | ParticleRainMsg (System.Msg Rain)
+    | ParticleSnowMsg (System.Msg Snow)
     | ChangeCursor String
     | Resize String
 
@@ -105,6 +108,11 @@ update msg model =
                 ( { model | systemRain = System.update particleMsg model.systemRain }
                 , Cmd.none
                 )
+     
+        ParticleSnowMsg particleMsg ->
+                ( { model | systemSnow = System.update particleMsg model.systemSnow }
+                , Cmd.none
+                )
 
         ChangeCursor cursor ->
             let
@@ -153,6 +161,9 @@ burst model =
             RainC _ ->
                 model
 
+            SnowC _ ->
+                model
+
 
 sprout: Model -> Model
 sprout model = 
@@ -199,6 +210,8 @@ view model =
                     System.view Stars.view props model.systemStars
                 RainC _->
                     System.view Rain.view props model.systemRain
+                SnowC _->
+                    System.view Snow.view props model.systemSnow
 
     in
     Html.main_
@@ -229,6 +242,7 @@ type Cursor = ConfettiC  { width : Int, height : Int}
             | FireworkC  { width : Int, height : Int}
             | StarC  { width : Int, height : Int}
             | RainC  { width : Int, height : Int}
+            | SnowC  { width : Int, height : Int}
             
 
 -- fair enough
@@ -252,6 +266,9 @@ cursorImage cursor =
 
         RainC _->
             "../assets/rain/umbrella.png"
+        
+        SnowC _->
+            "../assets/snow/snow.png"
 
 -- WHY!!!
 cursorDimensions : Cursor -> (Int, Int) 
@@ -275,6 +292,9 @@ cursorDimensions cursor =
         RainC dimensions -> 
             (dimensions.width, dimensions.height)
 
+        SnowC dimensions -> 
+            (dimensions.width, dimensions.height)
+
 -- fishy
 cursorDecode : String -> Cursor
 cursorDecode cursor =
@@ -296,6 +316,9 @@ cursorDecode cursor =
      
         "Rain" ->
             RainC  {width = 65, height=65}
+
+        "Snow" ->
+            SnowC  {width = 65, height=65}
 
         _-> 
             ConfettiC  {width = 65, height=65}
@@ -336,6 +359,7 @@ subscriptions model =
         , System.sub [] ParticleFireworkMsg model.systemFirework
         , System.sub [] ParticleStarsMsg model.systemStars
         , System.sub [ (Rain.rainEmitter model.window.width model.window.height)] ParticleRainMsg model.systemRain
+        , System.sub [ (Snow.snowEmitter model.window.width model.window.height)] ParticleSnowMsg model.systemSnow
         , Browser.Events.onClick (succeed TriggerBurst)
         , Browser.Events.onMouseMove
             (map2 MouseMove
@@ -356,6 +380,7 @@ init =
         , systemFirework = System.init (Random.initialSeed 0)
         , systemStars = System.init (Random.initialSeed 0)
         , systemRain = System.init (Random.initialSeed 0)
+        , systemSnow = System.init (Random.initialSeed 0)
         , mouse = ( 0, 0 )
         , cursor = (cursorDecode "Confetti")
         , window = {width=0, height=0}

@@ -9,7 +9,7 @@
  ```
 
 # Arrancar la web
-Live server sobre app.html
+Live server sobre app.html 
 
 # Librería de particulas
 
