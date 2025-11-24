@@ -1,0 +1,78 @@
+<!-- /app/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <base href="/" />
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no">
+
+  <meta property="og:title" content="Particulas">
+  <meta name="description" content="Particulas">
+  <meta property="og:type" content="website">
+
+  <!-- TODO cambiar miniatura al final del proy  ¿En que contexto sirve ver la steve?-->
+
+  <meta property="og:site_name" content="Particulass">
+  <meta name="author" content="Mikel Dalmau">
+
+
+  <title>particulas</title>
+  <!-- <link rel="stylesheet"   href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css"></link> -->
+  <script src="main.min.js"></script>
+  <!-- <script src="js/splide-port.js"></script> -->
+  </link>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+
+    .no-select {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+  </style>
+
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    var app = Elm.Main.init({
+      node: document.getElementById('app'),
+      flags: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    });
+    
+    // Enviar la posición de scroll a Elm (pasivo para rendimiento)
+    function sendScroll() {
+      app.ports.onScroll.send(window.scrollY || window.pageYOffset || 0);
+    }
+
+    // Inicial
+    sendScroll();
+
+    // Listener
+    window.addEventListener('resize', sendScroll);
+
+
+  </script>
+</body>
+
+</html>
